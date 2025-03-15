@@ -4,7 +4,6 @@ using UnityEngine;
 public class LevelGeneratorManager : MonoBehaviour
 {
     [SerializeField] private List<Segments>[] _segments = new List<Segments>[3];
-    private GameManager.LevelDireciton currentDirection = GameManager.LevelDireciton.Up;
     private SegmentPlacer _segmentPlacer;
 
     private void Start()

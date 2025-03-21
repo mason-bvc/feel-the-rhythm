@@ -11,6 +11,7 @@ public class SegmentPlacer : MonoBehaviour
 
         if (placeSegment != null && placeSegment.GetComponent<Segments>())
         {
+
            _currentLocation = placeSegment.GetComponent<Segments>().GetEndObject().transform;
         }
     }

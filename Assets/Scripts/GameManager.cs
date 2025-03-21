@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public enum LevelDireciton
+    private void Start()
     {
-        Up, Down, Left, Right
+        if (FindAnyObjectByType<LevelGeneratorManager>())
+        {
+            
+        }
     }
 }

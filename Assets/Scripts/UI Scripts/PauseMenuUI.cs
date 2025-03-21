@@ -3,17 +3,26 @@ using UnityEngine.InputSystem.Interactions;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
+
 public class PauseMenuUI : MonoBehaviour
 { 
     public GameObject gamePauseMenuUI;
     public bool isGamePaused = false;
     public Button quitButton;
+    public Button mainMenuButton;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         isGamePaused = false;
+        //Button Section:
+        //Game Quit button:
         Button gameQuits = quitButton.GetComponent<Button>();
         quitButton.onClick.AddListener(gameQuit);
+        
+        //Main Menu button:
+        Button mainMenuClick = mainMenuButton.GetComponent<Button>();
+        mainMenuClick.onClick.AddListener(mainMenu);
     }
 
     // Update is called once per frame
@@ -50,6 +59,11 @@ public class PauseMenuUI : MonoBehaviour
     public void gameQuit()
     {
         Application.Quit();
+    }
+
+    public void mainMenu()
+    {
+        SceneManager.LoadScene(1);
     }
     
 }

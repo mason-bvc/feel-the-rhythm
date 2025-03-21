@@ -1,13 +1,19 @@
 using UnityEngine;
+using UnityEngine.InputSystem.Interactions;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
+using System.Collections;
 public class PauseMenuUI : MonoBehaviour
 { 
     public GameObject gamePauseMenuUI;
     public bool isGamePaused = false;
+    public Button quitButton;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         isGamePaused = false;
+        Button gameQuits = quitButton.GetComponent<Button>();
+        quitButton.onClick.AddListener(gameQuit);
     }
 
     // Update is called once per frame
@@ -23,6 +29,7 @@ public class PauseMenuUI : MonoBehaviour
             {
                 GamePause();
             }
+           
         }
         
     }
@@ -39,4 +46,10 @@ public class PauseMenuUI : MonoBehaviour
         gamePauseMenuUI.SetActive (false);
         isGamePaused = false;
     }
+
+    public void gameQuit()
+    {
+        Application.Quit();
+    }
+    
 }

@@ -15,6 +15,7 @@ public class PauseMenuUI : MonoBehaviour
     void Start()
     {
         isGamePaused = false;
+        
         //Button Section:
         //Game Quit button:
         Button gameQuits = quitButton.GetComponent<Button>();

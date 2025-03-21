@@ -7,12 +7,15 @@ public class LevelGeneratorManager : MonoBehaviour
     [SerializeField] private List<Segments> _straightSegments;
     [SerializeField] private List<Segments> _leftSegments;
     [SerializeField] private List<Segments> _rightSegments;
+
+    [SerializeField] private Segments _endSegment;
+
     private SegmentPlacer _segmentPlacer;
 
     private void Start()
     {
         _segmentPlacer = FindFirstObjectByType<SegmentPlacer>();
-        GenerateLevel(100);
+        GenerateLevel(10);
     }
 
 
@@ -33,9 +36,8 @@ public class LevelGeneratorManager : MonoBehaviour
                     _segmentPlacer.PlaceSegment(_rightSegments[Random.Range(0, _rightSegments.Count)]);
                     break;
             }
-            
-            
         }
+        _segmentPlacer.PlaceSegment(_endSegment);
     }
 
 

@@ -730,7 +730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startButton: {fileID: 843182464}
-  settingsButton: {fileID: 0}
+  settingsButton: {fileID: 1121782765}
   quitButton: {fileID: 1963423009}
 --- !u!4 &735801200
 Transform:

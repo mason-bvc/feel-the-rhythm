@@ -12,8 +12,10 @@ public class MainMenuScript : MonoBehaviour
         //Start Button:
         Button gameStarts = startButton.GetComponent<Button>();
         startButton.onClick.AddListener(gameStart);
-        //Settings Button:
         
+        //Settings Button:
+        Button settingsClick = settingsButton.GetComponent<Button>();
+        settingsButton.onClick.AddListener(settingsMode);
         
         //Quit Button:
         Button gameQuits = quitButton.GetComponent<Button>();
@@ -28,6 +30,11 @@ public class MainMenuScript : MonoBehaviour
     public void quitGame()
     {
         Application.Quit();
+    }
+
+    public void settingsMode()
+    {
+        SceneManager.LoadScene(3);
     }
 
     

@@ -188,6 +188,7 @@ MonoBehaviour:
   - {fileID: 3015773601842583342, guid: d04ce280ab7869846a1d7bd062b950db, type: 3}
   - {fileID: 3015773601842583342, guid: d04ce280ab7869846a1d7bd062b950db, type: 3}
   _endSegment: {fileID: 5316247869463797851, guid: 9050082f9a8836e458a146572b7a51b2, type: 3}
+  _segmentsToPlace: 100
 --- !u!114 &1743974635
 MonoBehaviour:
   m_ObjectHideFlags: 0

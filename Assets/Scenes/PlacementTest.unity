@@ -179,14 +179,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _straightSegments:
-  - {fileID: 1026389375743498553, guid: aeffe328bdbc02b499d3d3b4db62c4f7, type: 3}
-  - {fileID: 1026389375743498553, guid: aeffe328bdbc02b499d3d3b4db62c4f7, type: 3}
+  - {fileID: 2722664818057619857, guid: 7002dc58f0c894b458adfc78237187ac, type: 3}
+  - {fileID: 3408392366411020595, guid: 6328f4ee1ded63e4290ceaab186a884a, type: 3}
+  - {fileID: 3737928934240357467, guid: 5b41097d64650e540b19befd070280d0, type: 3}
   _leftSegments:
-  - {fileID: 1485449183281708769, guid: d145892c546315249aa5c33412137d95, type: 3}
-  - {fileID: 1485449183281708769, guid: d145892c546315249aa5c33412137d95, type: 3}
+  - {fileID: 1350202690652716839, guid: 2bf45806f1e9d5c44bee984c10a7d625, type: 3}
+  - {fileID: 8170220975816325502, guid: bc9926bfbc28ae54690d5904f0e37e42, type: 3}
+  - {fileID: 3744459454850980274, guid: 09924aeecc2683d47982b7686981e0dc, type: 3}
   _rightSegments:
-  - {fileID: 3015773601842583342, guid: d04ce280ab7869846a1d7bd062b950db, type: 3}
-  - {fileID: 3015773601842583342, guid: d04ce280ab7869846a1d7bd062b950db, type: 3}
+  - {fileID: 8761266728105062336, guid: 5e6eac49a6bbe464abc1b934b9fe1393, type: 3}
+  - {fileID: 7199743970381576998, guid: 0f05765585be59f40a500057d4b507eb, type: 3}
+  - {fileID: 1246083759898361659, guid: a79d1f5fb064a58418f73732e0efcd1a, type: 3}
   _endSegment: {fileID: 5316247869463797851, guid: 9050082f9a8836e458a146572b7a51b2, type: 3}
   _segmentsToPlace: 100
 --- !u!114 &1743974635

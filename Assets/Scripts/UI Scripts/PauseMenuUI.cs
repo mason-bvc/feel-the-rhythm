@@ -4,6 +4,7 @@ using UnityEngine.Rendering;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class PauseMenuUI : MonoBehaviour
 { 
@@ -11,10 +12,13 @@ public class PauseMenuUI : MonoBehaviour
     public bool isGamePaused = false;
     public Button quitButton;
     public Button mainMenuButton;
+
+    public bool isTimerOn = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         isGamePaused = false;
+        isTimerOn = true;
         
         //Button Section:
         //Game Quit button:
@@ -42,12 +46,14 @@ public class PauseMenuUI : MonoBehaviour
            
         }
         
+        
     }
     public void GamePause()
     {
         Time.timeScale = 0;
         gamePauseMenuUI.SetActive (true);
         isGamePaused = true;
+        isTimerOn = false;
     }
 
     public void ResumeGame()
@@ -55,6 +61,7 @@ public class PauseMenuUI : MonoBehaviour
         Time.timeScale = 1;
         gamePauseMenuUI.SetActive (false);
         isGamePaused = false;
+        isTimerOn = true;
     }
 
     public void gameQuit()

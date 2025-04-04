@@ -4,6 +4,10 @@ public class LevelCompleter : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        //Complete the level
+        if (FindAnyObjectByType<Timer>())
+        {
+            FindAnyObjectByType<Timer>().updateTimer = false;
+            Destroy(gameObject);
+        }
     }
 }

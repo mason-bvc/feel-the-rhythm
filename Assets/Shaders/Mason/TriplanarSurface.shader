@@ -5,7 +5,7 @@ Shader "Custom/TriplanarSurface"
     // because the output color is predefined in the fragment shader code.
     Properties
     {
-
+        _MainTex ("Texture", 2D) = "white" {}
     }
 
     // The SubShader block containing the Shader code.
@@ -37,13 +37,20 @@ Shader "Custom/TriplanarSurface"
                 // The positionOS variable contains the vertex positions in object
                 // space.
                 float4 positionOS   : POSITION;
+                float2 uv : TEXCOORD;
+                float3 normal : NORMAL;
             };
 
             struct Varyings
             {
+                float2 uv : TEXCOORD;
                 // The positions in this struct must have the SV_POSITION semantic.
                 float4 positionHCS  : SV_POSITION;
+                float3 normal : NORMAL;
             };
+
+            sampler2D _MainTex;
+            sampler2D _BumpMap;
 
             // The vertex shader definition with properties defined in the Varyings
             // structure. The type of the vert function must match the type (struct)
@@ -55,16 +62,24 @@ Shader "Custom/TriplanarSurface"
                 // The TransformObjectToHClip function transforms vertex positions
                 // from object space to homogenous space
                 OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+
+                float3 vertexWorldPos = mul(unity_ObjectToWorld, IN.positionOS).xyz;
+                float3 anormal = abs(IN.normal);
+
+                OUT.uv = lerp(vertexWorldPos.xy, vertexWorldPos.zy, anormal.x);
+                OUT.uv = lerp(OUT.uv, vertexWorldPos.xz, anormal.y);
+                OUT.normal = IN.normal;
                 // Returning the output.
                 return OUT;
             }
 
             // The fragment shader definition.
-            half4 frag() : SV_Target
+            half4 frag(Varyings i) : SV_Target
             {
-                // Defining the color variable and returning it.
                 half4 customColor;
-                customColor = half4(0.5, 0, 0, 1);
+
+                customColor = tex2D(_MainTex, i.uv);
+
                 return customColor;
             }
             ENDHLSL

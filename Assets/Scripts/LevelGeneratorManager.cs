@@ -12,10 +12,12 @@ public class LevelGeneratorManager : MonoBehaviour
 
     private SegmentPlacer _segmentPlacer;
 
+    [SerializeField] private int _segmentsToPlace;
+
     private void Start()
     {
         _segmentPlacer = FindFirstObjectByType<SegmentPlacer>();
-        GenerateLevel(10);
+        GenerateLevel(_segmentsToPlace);
     }
 
 

@@ -1,87 +1,142 @@
 // This shader fills the mesh shape with a color predefined in the code.
 Shader "Custom/TriplanarSurface"
 {
-    // The properties block of the Unity shader. In this example this block is empty
-    // because the output color is predefined in the fragment shader code.
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
     }
 
-    // The SubShader block containing the Shader code.
     SubShader
     {
-        // SubShader Tags define when and under which conditions a SubShader block or
-        // a pass is executed.
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalRenderPipeline" }
+        Tags
+        {
+            "RenderType" = "Opaque"
+            "RenderPipeline" = "UniversalPipeline"
+        }
 
+        Cull Off
+        ZWrite On
         Pass
         {
-            // The HLSL code block. Unity SRP uses the HLSL language.
+            // The LightMode tag matches the ShaderPassName set in UniversalRenderPipeline.cs.
+            // The SRPDefaultUnlit pass and passes without the LightMode tag are also rendered by URP
+            Name "ForwardLit"
+            Tags
+            {
+                "LightMode" = "UniversalForward"
+            }
+
             HLSLPROGRAM
-            // This line defines the name of the vertex shader.
+
             #pragma vertex vert
-            // This line defines the name of the fragment shader.
             #pragma fragment frag
 
-            // The Core.hlsl file contains definitions of frequently used HLSL
-            // macros and functions, and also contains #include references to other
-            // HLSL files (for example, Common.hlsl, SpaceTransforms.hlsl, etc.).
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            // This multi_compile declaration is required for the Forward rendering path
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS
 
-            // The structure definition defines which variables it contains.
-            // This example uses the Attributes structure as an input structure in
-            // the vertex shader.
+            // This multi_compile declaration is required for the Forward+ rendering path
+            #pragma multi_compile _ _FORWARD_PLUS
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RealtimeLights.hlsl"
+
             struct Attributes
             {
-                // The positionOS variable contains the vertex positions in object
-                // space.
                 float4 positionOS   : POSITION;
-                float2 uv : TEXCOORD;
-                float3 normal : NORMAL;
+                float3 normalOS     : NORMAL;
+                float2 uv           : TEXCOORD;
             };
 
             struct Varyings
             {
-                float2 uv : TEXCOORD;
-                // The positions in this struct must have the SV_POSITION semantic.
-                float4 positionHCS  : SV_POSITION;
-                float3 normal : NORMAL;
+                float4 positionCS  : SV_POSITION;
+                float2 uv          : TEXCOORD;
+                float3 positionWS  : TEXCOORD1;
+                float3 normalWS    : TEXCOORD2;
             };
 
             sampler2D _MainTex;
-            sampler2D _BumpMap;
 
-            // The vertex shader definition with properties defined in the Varyings
-            // structure. The type of the vert function must match the type (struct)
-            // that it returns.
+            //
+            // Mason: ported from https://www.youtube.com/watch?v=YwnVl2YHXBc
+            //
+
             Varyings vert(Attributes IN)
             {
-                // Declaring the output object (OUT) with the Varyings struct.
                 Varyings OUT;
-                // The TransformObjectToHClip function transforms vertex positions
-                // from object space to homogenous space
-                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+
+                OUT.positionWS = TransformObjectToWorld(IN.positionOS.xyz);
+                OUT.positionCS = TransformWorldToHClip(OUT.positionWS);
+                OUT.normalWS = TransformObjectToWorldNormal(IN.normalOS);
 
                 float3 vertexWorldPos = mul(unity_ObjectToWorld, IN.positionOS).xyz;
-                float3 anormal = abs(IN.normal);
+                float3 anormal = abs(normalize(mul(unity_ObjectToWorld, IN.normalOS)));
 
                 OUT.uv = lerp(vertexWorldPos.xy, vertexWorldPos.zy, anormal.x);
                 OUT.uv = lerp(OUT.uv, vertexWorldPos.xz, anormal.y);
-                OUT.normal = IN.normal;
-                // Returning the output.
+
                 return OUT;
             }
 
-            // The fragment shader definition.
-            half4 frag(Varyings i) : SV_Target
+            float3 MyLightingFunction(float3 normalWS, Light light)
             {
-                half4 customColor;
-
-                customColor = tex2D(_MainTex, i.uv);
-
-                return customColor;
+                float NdotL = dot(normalWS, normalize(light.direction));
+                NdotL = (NdotL + 1) * 0.5;
+                return saturate(NdotL) * light.color * light.distanceAttenuation * light.shadowAttenuation;
             }
+
+            // This function loops through the lights in the scene
+            float3 MyLightLoop(float3 color, InputData inputData)
+            {
+                float3 lighting = 0;
+
+                // Get the main light
+                Light mainLight = GetMainLight();
+                lighting += MyLightingFunction(inputData.normalWS, mainLight);
+
+                // Get additional lights
+                #if defined(_ADDITIONAL_LIGHTS)
+
+                // Additional light loop including directional lights. This block is specific to Forward+.
+                #if USE_FORWARD_PLUS
+                UNITY_LOOP for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++)
+                {
+                    Light additionalLight = GetAdditionalLight(lightIndex, inputData.positionWS, half4(1,1,1,1));
+                    lighting += MyLightingFunction(inputData.normalWS, additionalLight);
+                }
+                #endif
+
+                // Additional light loop. The GetAdditionalLightsCount method always returns 0 in Forward+.
+                uint pixelLightCount = GetAdditionalLightsCount();
+                LIGHT_LOOP_BEGIN(pixelLightCount)
+                    Light additionalLight = GetAdditionalLight(lightIndex, inputData.positionWS, half4(1,1,1,1));
+                    lighting += MyLightingFunction(inputData.normalWS, additionalLight);
+                LIGHT_LOOP_END
+
+                #endif
+
+                return color * lighting;
+            }
+
+            half4 frag(Varyings input) : SV_Target0
+            {
+                // The Forward+ light loop (LIGHT_LOOP_BEGIN) requires the InputData struct to be in its scope.
+                InputData inputData = (InputData)0;
+                inputData.positionWS = input.positionWS;
+                inputData.normalWS = input.normalWS;
+                inputData.viewDirectionWS = GetWorldSpaceNormalizeViewDir(input.positionWS);
+                inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
+
+                float3 surfaceColor = float3(1, 1, 1);
+                float3 lighting = MyLightLoop(surfaceColor, inputData);
+
+                half4 finalColor = tex2D(_MainTex, input.uv);
+                finalColor *= half4(lighting, 1);
+
+                return finalColor;
+            }
+
             ENDHLSL
         }
     }

@@ -16,7 +16,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _characterController = GetComponent<CharacterController>();
-        
+
         Cursor.lockState = CursorLockMode.Locked;
     }
     private void FixedUpdate()
@@ -24,7 +24,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         _characterController.SimpleMove(transform.forward * moving.action.ReadValue<Vector2>().y * speed + transform.right * moving.action.ReadValue<Vector2>().x * speed);
 
-        transform.Rotate(new Vector3(0, looking.action.ReadValue<Vector2>().x, 0) * cameraSpeed);
+        transform.Rotate(new Vector3(0, looking.action.ReadValue<Vector2>().x * 10, 0) * cameraSpeed);
 
         Debug.Log(moving.action.ReadValue<Vector2>());
     }

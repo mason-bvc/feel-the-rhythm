@@ -19,6 +19,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
     }
+
     private void FixedUpdate()
     {
 

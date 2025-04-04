@@ -1,12 +1,14 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private void Start()
+    // Mason: hah
+    public static event Action<GameManager> OnInitializedGlobalInstance;
+
+    public void Start()
     {
-        if (FindAnyObjectByType<LevelGeneratorManager>())
-        {
-            
-        }
+        // Mason: hah
+        OnInitializedGlobalInstance?.Invoke(this);
     }
 }

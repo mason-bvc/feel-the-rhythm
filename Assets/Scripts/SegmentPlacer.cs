@@ -7,7 +7,7 @@ public class SegmentPlacer : MonoBehaviour
 
     private void Start()
     {
-       GameObject placeSegment = Instantiate(_startSegment.gameObject, new Vector3(0,0,0), new Quaternion(0,0,0,0));
+        GameObject placeSegment = Instantiate(_startSegment.gameObject, new Vector3(0,0,0), new Quaternion(0,0,0,0));
         _currentLocation = placeSegment.GetComponent<Segments>().GetEndObject().transform;
     }
 

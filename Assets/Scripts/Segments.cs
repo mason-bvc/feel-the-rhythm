@@ -8,10 +8,15 @@ public class Segments : MonoBehaviour
     // Mason: texture stuff
     private Material _wallMaterial;
 
+    // Mason: hah
+    private GameManager _gameManager;
+
     [SerializeField] private GameObject endObject;
 
     public GameObject GetEndObject()
-    {  return endObject; }
+    {
+        return endObject;
+    }
 
     // Mason: materials
 
@@ -22,6 +27,9 @@ public class Segments : MonoBehaviour
 
     public void Start()
     {
+        // Mason: hah
+        GameManager.OnInitializedGlobalInstance += gm => _gameManager = gm;
+
         Color[] colors = new Color[128 * 128];
         Texture2D t = new(128, 128, TextureFormat.RGBA32, 0, false);
 

@@ -1,24 +1,35 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class NavigationalFeedback : MonoBehaviour
 {
-    public void Start()
+    public float Frequency = 1f;
+
+    // public void Start()
+    // {
+    //     if (Gamepad.current != null)
+    //     {
+    //         StartCoroutine("DoVibrationTest");
+    //     }
+    // }
+
+    // public IEnumerator DoVibrationTest()
+    // {
+    //     // TODO: change rhyhtm depending on how close or far you are to orb
+    //     Gamepad.current.SetMotorSpeeds(0.25f, 0.75f);
+    //     yield return new WaitForSeconds(0.125f);
+    //     Gamepad.current.SetMotorSpeeds(0, 0);
+    //     yield return new WaitForSeconds(0.125f);
+    //     StartCoroutine("DoVibrationTest");
+    // }
+
+    public void FixedUpdate()
     {
-        if (Gamepad.current != null)
-        {
-            StartCoroutine("DoVibrationTest");
-        }
     }
 
-    public IEnumerator DoVibrationTest()
+    public void Update()
     {
-        // TODO: change rhyhtm depending on how close or far you are to orb
-        Gamepad.current.SetMotorSpeeds(0.25f, 0.75f);
-        yield return new WaitForSeconds(0.125f);
-        Gamepad.current.SetMotorSpeeds(0, 0);
-        yield return new WaitForSeconds(0.125f);
-        StartCoroutine("DoVibrationTest");
+        float t = Time.time * Frequency;
+        Gamepad.current?.SetMotorSpeeds(0, Mathf.Sign(Mathf.Sin(2f * Mathf.PI * t)));
     }
 }

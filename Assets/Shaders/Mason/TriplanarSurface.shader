@@ -14,7 +14,6 @@ Shader "Custom/TriplanarSurface"
             "RenderPipeline" = "UniversalPipeline"
         }
 
-        Cull Off
         ZWrite On
         Pass
         {

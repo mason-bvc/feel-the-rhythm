@@ -12,11 +12,11 @@ public class MainMenuScript : MonoBehaviour
         //Start Button:
         Button gameStarts = startButton.GetComponent<Button>();
         startButton.onClick.AddListener(gameStart);
-        
+
         //Settings Button:
         Button settingsClick = settingsButton.GetComponent<Button>();
         settingsButton.onClick.AddListener(settingsMode);
-        
+
         //Quit Button:
         Button gameQuits = quitButton.GetComponent<Button>();
         quitButton.onClick.AddListener(quitGame);
@@ -24,7 +24,7 @@ public class MainMenuScript : MonoBehaviour
 
     public void gameStart()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(4);
     }
 
     public void quitGame()
@@ -37,5 +37,5 @@ public class MainMenuScript : MonoBehaviour
         SceneManager.LoadScene(3);
     }
 
-    
+
 }

@@ -3,7 +3,13 @@ using UnityEngine.InputSystem;
 
 public class NavigationalFeedback : MonoBehaviour
 {
+    private CharacterController characterController;
     public float Frequency = 1f;
+
+    public void Start()
+    {
+        characterController = GetComponent<CharacterController>();
+    }
 
     // public void Start()
     // {
@@ -29,7 +35,19 @@ public class NavigationalFeedback : MonoBehaviour
 
     public void Update()
     {
-        float t = Time.time * Frequency;
-        Gamepad.current?.SetMotorSpeeds(0, Mathf.Sign(Mathf.Sin(2f * Mathf.PI * t)));
+        Vector3 v = new(1, 0, 1);
+
+        v.Scale(characterController.velocity);
+        Frequency = v.sqrMagnitude / 10f;
+
+        if (Mathf.Abs(Frequency) < 0.01f)
+        {
+            Gamepad.current?.SetMotorSpeeds(0, 0);
+        }
+        else
+        {
+            float t = Time.time * Frequency;
+            Gamepad.current?.SetMotorSpeeds(0, Mathf.Sign(Mathf.Sin(2f * Mathf.PI * t)));
+        }
     }
 }
